@@ -1,33 +1,59 @@
 import React, { useState } from 'react';
-import { Rocket, Calculator, Zap, ShieldAlert, Package, CheckCircle, Smartphone, MapPin, Store, AlertTriangle, Coins, TrendingUp } from 'lucide-react';
+import { 
+  Crown, 
+  Calculator, 
+  Workflow, 
+  Users, 
+  Package, 
+  TrendingUp, 
+  Settings2,
+  CheckCircle2,
+  ArrowRight,
+  Target,
+  Megaphone,
+  Truck,
+  Wallet
+} from 'lucide-react';
+
+// --- DATA KATALOG ABSH ---
+const ABSH_CATALOG = [
+  { id: 'lelabu', name: 'Botol Lelabu, Casa', prices: { '2 Dus': 6300, '10 Dus': 6000, '100 Dus': 5500, '1000 Dus': 5000 } },
+  { id: 'hermes_inocu', name: 'Hermes, Inocu, Jo Malone, Byredo', prices: { '2 Dus': 6500, '10 Dus': 6000, '100 Dus': 5800, '1000 Dus': 5500 } },
+  { id: 'channel_ori', name: 'Channel Ori, Hermes Cup, Pro Player', prices: { '2 Dus': 7000, '10 Dus': 6700, '100 Dus': 6200, '1000 Dus': 6000 } },
+  { id: 'twilly_chloe', name: 'Twilly, Chloe, Lacoste, Channel Hitam', prices: { '2 Dus': 7500, '10 Dus': 7200, '100 Dus': 6800, '1000 Dus': 6500 } },
+  { id: 'hertic', name: 'Botol Hertic', prices: { '2 Dus': 8000, '10 Dus': 7500, '100 Dus': 7200, '1000 Dus': 7000 } },
+  { id: 'laliq', name: 'Laliq Square, Diptiq, Zara', prices: { '2 Dus': 9500, '10 Dus': 9000, '100 Dus': 8500, '1000 Dus': 8000 } },
+  { id: 'hermes_pendora', name: 'Hermes Pendora, Tomford Merah', prices: { '2 Dus': 10000, '10 Dus': 9500, '100 Dus': 9000, '1000 Dus': 8500 } },
+];
+
+const TIER_OPTIONS = ['2 Dus', '10 Dus', '100 Dus', '1000 Dus'];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState(0);
-  const [bottleCount, setBottleCount] = useState(500);
 
   const tabs = [
-    { id: 0, label: 'Visi & Produk', icon: Rocket },
-    { id: 1, label: 'Keuangan & HPP', icon: Calculator },
-    { id: 2, label: 'Strategi O2O', icon: Zap },
-    { id: 3, label: 'Roadmap & Risiko', icon: ShieldAlert }
+    { id: 0, label: 'Brand & Visi', icon: Crown },
+    { id: 1, label: 'Alur Bisnis', icon: Workflow },
+    { id: 2, label: 'Financial Engine', icon: Calculator },
+    { id: 3, label: 'Struktur Tim', icon: Users }
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 font-sans selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-lime-400/30">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between py-4 gap-4">
+      <nav className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4">
             <div className="flex-shrink-0">
-              <h1 className="text-3xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-cyan-400 to-pink-400">
-                ELYON
+              <h1 className="text-3xl font-serif font-bold tracking-tight text-white flex items-center gap-2">
+                ELYON <span className="text-lime-400 text-lg">✦</span>
               </h1>
-              <p className="text-[10px] text-gray-400 tracking-[0.2em] uppercase mt-1 font-mono">
-                The Gen-Z Fragrance Revolution
+              <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase mt-1 font-mono">
+                Premium Vibe, Accessible Price
               </p>
             </div>
             
-            <div className="flex overflow-x-auto hide-scrollbar space-x-1 sm:space-x-2 pb-2 sm:pb-0">
+            <div className="flex overflow-x-auto hide-scrollbar space-x-2 pb-2 md:pb-0">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -35,13 +61,13 @@ export default function App() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap ${
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 whitespace-nowrap ${
                       isActive 
-                      ? 'bg-gray-900 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.15)] border border-cyan-500/30' 
-                      : 'text-gray-500 hover:text-gray-300 hover:bg-gray-900/50 border border-transparent'
+                      ? 'bg-lime-400/10 text-lime-400 border border-lime-400/30' 
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent'
                     }`}
                   >
-                    <Icon size={16} className={isActive ? 'animate-pulse' : ''} />
+                    <Icon size={16} />
                     <span className="text-sm font-medium">{tab.label}</span>
                   </button>
                 );
@@ -52,416 +78,427 @@ export default function App() {
       </nav>
 
       {/* Main Content Area */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
-          {activeTab === 0 && <TabVisiProduk />}
-          {activeTab === 1 && <TabKeuanganHPP bottleCount={bottleCount} setBottleCount={setBottleCount} />}
-          {activeTab === 2 && <TabStrategiO2O />}
-          {activeTab === 3 && <TabRoadmapRisiko />}
+          {activeTab === 0 && <TabBrand />}
+          {activeTab === 1 && <TabFlowchart />}
+          {activeTab === 2 && <TabFinancial />}
+          {activeTab === 3 && <TabTeam />}
         </div>
       </main>
     </div>
   );
 }
 
-// --- TAB 1: VISI & PRODUK ---
-function TabVisiProduk() {
+// --- TAB 1: BRAND & VISI ---
+function TabBrand() {
   return (
-    <div className="space-y-8">
-      <div className="bg-gray-900/50 border border-gray-800 p-6 sm:p-8 rounded-2xl relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-colors duration-500" />
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <Rocket className="text-cyan-400" /> Premium Upgrade: 50ml Custom Bottle Doff
-        </h2>
-        <p className="text-gray-300 text-lg leading-relaxed max-w-3xl">
-          Mendefinisikan ulang standar parfum lokal. Beralih dari 35ml standar pabrik ke <strong className="text-white">50ml Custom Bottle kosongan</strong> dari vendor luar untuk memaksimalkan <em>Premium Look</em>. Memberikan value produk setara parfum Rp 200.000+, namun dijual di harga normal <strong className="text-emerald-400">Rp 89.000</strong>.
-        </p>
+    <div className="space-y-10">
+      <div className="bg-zinc-900 border border-zinc-800 p-8 md:p-12 rounded-3xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl" />
+        <div className="relative z-10 max-w-3xl">
+          <h2 className="text-3xl font-serif font-bold mb-4 text-white">
+            Mendefinisikan Ulang Parfum Gen-Z
+          </h2>
+          <p className="text-zinc-300 text-lg leading-relaxed mb-8">
+            ELYON mengisi kekosongan strategis di pasar wewangian Indonesia. Kami memberikan kualitas aroma premium dan kemasan estetis yang didanai melalui sistem <strong className="text-lime-400">Pre-Order (PO) & Lean Startup</strong> untuk menekan risiko inventaris hingga 0%.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <div className="bg-zinc-950 border border-zinc-800 px-4 py-2 rounded-lg flex items-center gap-2">
+              <Package size={16} className="text-lime-400" />
+              <span className="text-sm font-mono text-zinc-300">Custom Bottle 50ml</span>
+            </div>
+            <div className="bg-zinc-950 border border-zinc-800 px-4 py-2 rounded-lg flex items-center gap-2">
+              <Target size={16} className="text-lime-400" />
+              <span className="text-sm font-mono text-zinc-300">Zero Inventory Risk</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div>
-        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-          <Package className="text-pink-400" /> Varian Produk MVP
+        <h3 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
+          MVP Line-Up (Fase 1)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ProductCard 
             title="ELYON Noir" 
-            desc="Woody Aromatic. Maskulin & Misterius."
-            visual="Botol Kotak Black Matte (Doff) + Laser Engrave tembus kaca."
-            accent="from-gray-700 to-gray-900"
-            textColor="text-emerald-400"
+            desc="Woody Aromatic. Maskulin, misterius, berwibawa."
+            visual="Botol Kotak Black Matte (Doff) + Laser Engrave."
+            accent="bg-gradient-to-t from-lime-400/20 to-zinc-900 border-lime-400/30"
+            titleColor="text-lime-400"
           />
           <ProductCard 
             title="ELYON Blanc" 
-            desc="Fresh & Clean. Modern & Energetic."
-            visual="Botol White Matte (Doff) + Print Holographic/Neon."
-            accent="from-gray-200 to-gray-400"
-            textColor="text-cyan-400"
-            darkText={true}
+            desc="Fresh & Clean. Modern, energetic, pendamping harian."
+            visual="Botol White Matte (Doff) + Print Holographic."
+            accent="bg-gradient-to-t from-cyan-400/20 to-zinc-200 border-cyan-400/30"
+            titleColor="text-cyan-900"
+            isLight
           />
           <ProductCard 
             title="ELYS Rose" 
-            desc="Floral Fruity. Sweet & Playful."
+            desc="Floral Fruity. Feminin, sweet, playful."
             visual="Botol Pink Matte (Doff) + Sablon Putih Solid."
-            accent="from-pink-900/50 to-pink-950"
-            textColor="text-pink-400"
+            accent="bg-gradient-to-t from-pink-500/20 to-rose-900/50 border-pink-500/30"
+            titleColor="text-pink-400"
           />
         </div>
       </div>
+    </div>
+  );
+}
 
-      <div>
-        <h3 className="text-xl font-bold mb-6 flex items-center gap-2 mt-12">
-          <CheckCircle className="text-emerald-400" /> Struktur Kepemilikan (75/25)
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
-            <h4 className="text-lg font-bold mb-2">Partner (75% Equity)</h4>
-            <p className="text-sm text-emerald-400 font-mono mb-4">CFO & Supply Chain Director</p>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>• Investor Utama (Modal Rp 20.000.000).</li>
-              <li>• Sourcing & negosiasi Vendor Botol 50ml.</li>
-              <li>• Negosiator Jasa Filling dengan Pabrik ABSH Jombang.</li>
-              <li>• Buka jalur B2B konsinyasi Coffee Shop.</li>
-              <li>• Auditor finansial & approval budget bulanan.</li>
-            </ul>
-          </div>
-          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500" />
-            <h4 className="text-lg font-bold mb-2">Hanif Saifudin (25% Equity)</h4>
-            <p className="text-sm text-cyan-400 font-mono mb-4">CMO & COO</p>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>• Otak Strategi & Eksekutor Harian. (Gaji Operasional).</li>
-              <li>• Kreator identitas visual, desain botol, konten sosmed.</li>
-              <li>• Mengelola ekosistem digital (Web, Kasir, CRM).</li>
-              <li>• Eksekutor periklanan digital (Meta/TikTok Ads).</li>
-              <li>• Customer Service & Operasional pemenuhan (Fulfillment).</li>
-            </ul>
-          </div>
+function ProductCard({ title, desc, visual, accent, titleColor = "text-white", isLight = false }: any) {
+  return (
+    <div className={`bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-lime-400/50 transition-colors`}>
+      <div className={`h-32 w-full ${accent} flex items-end p-5 relative overflow-hidden`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <h3 className={`text-2xl font-serif font-bold relative z-10 ${titleColor}`}>{title}</h3>
+      </div>
+      <div className="p-6">
+        <p className="font-medium mb-4 text-zinc-300">{desc}</p>
+        <div className="bg-zinc-950 rounded-lg p-3 border border-zinc-800/50">
+          <span className="block text-[10px] uppercase text-zinc-500 mb-1 font-mono">Visual Target</span>
+          <p className="text-sm text-zinc-400">{visual}</p>
         </div>
       </div>
     </div>
   );
 }
 
-function ProductCard({ title, desc, visual, accent, textColor, darkText = false }: any) {
+// --- TAB 2: ALUR BISNIS ---
+function TabFlowchart() {
+  const steps = [
+    {
+      icon: Settings2,
+      title: "Fase 0: Inisiasi & Setup",
+      desc: "ELY menyiapkan modal awal Rp 20.000.000. HANIF mengeksekusi desain brand, logo, visual botol, dan setup ekosistem digital (Web, CRM, Ads).",
+      color: "text-zinc-400"
+    },
+    {
+      icon: Package,
+      title: "Fase 1: Sourcing & R&D",
+      desc: "Order sampel botol + wangi dari pabrik ABSH. Melakukan 'Blind Scent Test' ke target market. Fiksasi vendor botol custom & cetak PR Kit untuk Influencer.",
+      color: "text-lime-400"
+    },
+    {
+      icon: Megaphone,
+      title: "Fase 2: Marketing & Hype",
+      desc: "Bakar budget iklan digital (Meta/TikTok Ads). Kirim PR Kit & Giveaway. Tujuannya membangun audiens dan demand sebelum produk diproduksi massal.",
+      color: "text-rose-400"
+    },
+    {
+      icon: Target,
+      title: "Fase 3: Keran PO Dibuka",
+      desc: "Buka Pre-Order (PO) selama 14 hari via OrderOnline.id. Harga Promo Early Bird. Uang dari konsumen masuk dan dikumpulkan untuk modal produksi.",
+      color: "text-blue-400"
+    },
+    {
+      icon: Workflow,
+      title: "Fase 4: Produksi Pabrik",
+      desc: "Pembayaran HPP dilunasi ke ABSH. Proses maklon (Filling cairan, pemasangan botol) berjalan. Estimasi waktu edukasi ke konsumen: 21 hari kerja.",
+      color: "text-purple-400"
+    },
+    {
+      icon: Truck,
+      title: "Fase 5: Fulfillment & UGC",
+      desc: "QC ketat & packing 3 lapis. Pengiriman barang. Konsumen ditawarkan Cashback Rp 20rb jika membuat video unboxing di sosmed (UGC Viral Loop).",
+      color: "text-cyan-400"
+    },
+    {
+      icon: Wallet,
+      title: "Fase 6: Distribusi Profit",
+      desc: "Rekapitulasi keuangan. Pembayaran Gaji Operasional HANIF. Laba bersih yang tersisa dibagikan sesuai porsi saham: ELY (75%) dan HANIF (25%).",
+      color: "text-emerald-400"
+    }
+  ];
+
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-600 transition-colors">
-      <div className={`h-24 w-full bg-gradient-to-br ${accent} flex items-end p-4`}>
-        <h3 className={`text-xl font-black ${darkText ? 'text-gray-900' : 'text-white'}`}>{title}</h3>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-serif font-bold text-white mb-4">Mekanisme Bisnis End-to-End</h2>
+        <p className="text-zinc-400">Arsitektur operasional dari nol hingga pembagian profit.</p>
       </div>
-      <div className="p-5">
-        <p className={`font-medium mb-3 ${textColor}`}>{desc}</p>
-        <p className="text-sm text-gray-400 leading-relaxed border-t border-gray-800 pt-3">
-          <span className="block text-xs uppercase text-gray-500 mb-1 font-mono">Visual Target</span>
-          {visual}
-        </p>
+
+      <div className="relative border-l border-zinc-800 ml-4 md:ml-8 space-y-12 pb-8">
+        {steps.map((step, idx) => {
+          const Icon = step.icon;
+          return (
+            <div key={idx} className="relative pl-8 md:pl-12 group">
+              <div className="absolute w-10 h-10 bg-zinc-950 border border-zinc-800 rounded-full -left-5 top-0 flex items-center justify-center group-hover:border-lime-400 transition-colors z-10">
+                <Icon size={18} className={step.color} />
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
+                <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-zinc-400 leading-relaxed">{step.desc}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-
-// --- TAB 2: KEUANGAN & HPP ---
-function TabKeuanganHPP({ bottleCount, setBottleCount }: any) {
-  const pricePO = 69000;
-  const hppPerBottle = 28500;
-  const adsPerBottle = 20000;
+// --- TAB 3: FINANCIAL ENGINE ---
+function TabFinancial() {
+  // Input States
+  const [selectedBottle, setSelectedBottle] = useState(ABSH_CATALOG[2]); // Default Channel Ori
+  const [selectedTier, setSelectedTier] = useState('100 Dus');
   
-  const revenue = bottleCount * pricePO;
-  const totalHPP = bottleCount * hppPerBottle;
-  const totalAds = bottleCount * adsPerBottle;
-  const netProfit = revenue - totalHPP - totalAds;
+  const [customBox, setCustomBox] = useState(5000);
+  const [customPrint, setCustomPrint] = useState(5000);
+  const [opsLogistik, setOpsLogistik] = useState(2000);
+  
+  const [bottleTarget, setBottleTarget] = useState(500);
+  const [sellingPrice, setSellingPrice] = useState(69000);
+  
+  const [totalAdsBudget, setTotalAdsBudget] = useState(5000000);
+  const [hanifSalary, setHanifSalary] = useState(2000000);
+
+  // Calculations
+  const baseHppAbsh = selectedBottle.prices[selectedTier as keyof typeof selectedBottle.prices] || 0;
+  const totalHppPerBottle = baseHppAbsh + customBox + customPrint + opsLogistik;
+  
+  const totalRevenue = bottleTarget * sellingPrice;
+  const totalHppAll = bottleTarget * totalHppPerBottle;
+  const grossProfit = totalRevenue - totalHppAll;
+  const netProfit = grossProfit - totalAdsBudget - hanifSalary;
+
+  const elyShare = netProfit > 0 ? netProfit * 0.75 : 0;
+  const hanifShare = netProfit > 0 ? netProfit * 0.25 : 0;
+
+  const formatRp = (num: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
   return (
-    <div className="space-y-8">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      {/* Alert Merah Tebal */}
-      <div className="bg-red-950/40 border border-red-500/50 rounded-xl p-4 flex items-start gap-4">
-        <AlertTriangle className="text-red-500 mt-1 flex-shrink-0" />
-        <div>
-          <h4 className="text-red-400 font-bold uppercase tracking-wide">Peringatan Akuntansi</h4>
-          <p className="text-red-200/80 text-sm mt-1">
-            BIAYA IKLAN (ADS) BUKAN HPP. Iklan adalah Biaya Operasional (OPEX). HPP murni adalah biaya wujud fisik produk.
-          </p>
-        </div>
-      </div>
+      {/* LEFT COLUMN: Control Panel */}
+      <div className="lg:col-span-5 space-y-6">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <Settings2 className="text-lime-400" /> Parameter HPP & Produksi
+          </h3>
+          
+          <div className="space-y-5">
+            {/* Pabrik ABSH Selection */}
+            <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-mono text-zinc-500 uppercase">Data Pabrik ABSH</span>
+              </div>
+              <div>
+                <label className="block text-sm text-zinc-400 mb-1.5">Jenis Botol (35ml Maklon)</label>
+                <select 
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
+                  value={selectedBottle.id}
+                  onChange={(e) => setSelectedBottle(ABSH_CATALOG.find(b => b.id === e.target.value) || ABSH_CATALOG[0])}
+                >
+                  {ABSH_CATALOG.map(b => (
+                    <option key={b.id} value={b.id}>{b.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm text-zinc-400 mb-1.5">Tier Pemesanan</label>
+                <select 
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
+                  value={selectedTier}
+                  onChange={(e) => setSelectedTier(e.target.value)}
+                >
+                  {TIER_OPTIONS.map(t => (
+                    <option key={t} value={t}>{t} (Harga: {formatRp(selectedBottle.prices[t as keyof typeof selectedBottle.prices])}/pcs)</option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Kolom Kiri: Rincian HPP */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
-            <Coins className="text-emerald-400" /> Rincian HPP (Harga Pokok Penjualan)
+            {/* Custom Extras */}
+            <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
+              <span className="text-xs font-mono text-zinc-500 uppercase">Custom Vendor Luar (Rp)</span>
+              <InputRow label="Hardbox / Kemasan" value={customBox} onChange={setCustomBox} />
+              <InputRow label="Cetak Doff / Laser" value={customPrint} onChange={setCustomPrint} />
+              <InputRow label="Logistik & Packing" value={opsLogistik} onChange={setOpsLogistik} />
+            </div>
+            
+            <div className="flex justify-between items-center p-4 bg-lime-400/10 border border-lime-400/30 rounded-xl">
+              <span className="font-bold text-lime-400">Total HPP / Botol</span>
+              <span className="font-bold text-xl text-white">{formatRp(totalHppPerBottle)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <Target className="text-blue-400" /> Strategi Penjualan & OPEX
           </h3>
           <div className="space-y-4">
-            <HppRow label="Cairan 50ml + Jasa Filling ABSH" value="Rp 9.000" />
-            <HppRow label="Botol Kaca 50ml Kosong (Luar)" value="Rp 7.500" />
-            <HppRow label="Cetak Laser/Doff Botol" value="Rp 5.000" />
-            <HppRow label="Hardbox/Softbox Premium" value="Rp 5.000" />
-            <HppRow label="Ops Logistik (Bubble, Stiker)" value="Rp 2.000" />
-            
-            <div className="pt-4 border-t border-gray-700 mt-4">
-              <div className="flex justify-between items-center text-lg font-bold text-emerald-400">
-                <span>TOTAL HPP PER BOTOL</span>
-                <span>Rp 28.500</span>
-              </div>
-            </div>
+            <InputRow label="Target Penjualan (Botol)" value={bottleTarget} onChange={setBottleTarget} step={50} />
+            <InputRow label="Harga Jual (Rp)" value={sellingPrice} onChange={setSellingPrice} step={1000} />
+            <hr className="border-zinc-800 my-4" />
+            <InputRow label="Total Budget Iklan (Rp)" value={totalAdsBudget} onChange={setTotalAdsBudget} step={500000} />
+            <InputRow label="Gaji Ops HANIF (Rp)" value={hanifSalary} onChange={setHanifSalary} step={500000} />
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT COLUMN: Output Dashboard */}
+      <div className="lg:col-span-7 space-y-6">
+        
+        {/* Revenue & Gross */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+            <p className="text-sm text-zinc-400 mb-2">Total Revenue (Omzet)</p>
+            <p className="text-3xl font-bold text-white">{formatRp(totalRevenue)}</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{bottleTarget} botol x {formatRp(sellingPrice)}</p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+            <p className="text-sm text-zinc-400 mb-2">Total HPP Keseluruhan</p>
+            <p className="text-3xl font-bold text-red-400">-{formatRp(totalHppAll)}</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">Modal barang fisik murni</p>
           </div>
         </div>
 
-        {/* Kolom Kanan: Gross Margin */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center">
-          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-white">
-            <TrendingUp className="text-cyan-400" /> Gross Margin (Laba Kotor)
-          </h3>
+        {/* Laba Kotor & Bersih */}
+        <div className="bg-zinc-900 border border-zinc-800 p-6 md:p-8 rounded-3xl relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 blur-3xl rounded-full" />
           
-          <div className="space-y-8">
+          <div className="flex flex-col md:flex-row justify-between md:items-end mb-8 border-b border-zinc-800 pb-6 gap-4">
             <div>
-              <div className="flex justify-between mb-2">
-                <span className="font-medium text-gray-300">Harga Promo PO (Rp 69.000)</span>
-                <span className="text-pink-400 font-bold">Margin 58%</span>
-              </div>
-              <div className="h-4 w-full bg-gray-800 rounded-full overflow-hidden">
-                <div className="h-full bg-pink-500 rounded-full" style={{ width: '58%' }}></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-2">Laba Kotor: Rp 40.500 / botol</p>
+              <p className="text-sm text-zinc-400 mb-1">Laba Kotor (Gross Profit)</p>
+              <p className="text-2xl font-bold text-white">{formatRp(grossProfit)}</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Margin: {Math.round((grossProfit/totalRevenue)*100 || 0)}%</p>
             </div>
-
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="font-medium text-gray-300">Harga Normal (Rp 89.000)</span>
-                <span className="text-cyan-400 font-bold">Margin 68%</span>
-              </div>
-              <div className="h-4 w-full bg-gray-800 rounded-full overflow-hidden">
-                <div className="h-full bg-cyan-500 rounded-full" style={{ width: '68%' }}></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-2">Laba Kotor: Rp 60.500 / botol</p>
+            <div className="md:text-right">
+              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX</p>
+              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget + hanifSalary)}</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Iklan + Gaji Hanif</p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Kalkulator Interaktif */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mt-8">
-        <h3 className="text-xl font-bold mb-6 text-center text-white">Simulasi Masa Promo PO (Rp 69.000/botol)</h3>
-        
-        <div className="mb-10 px-4">
-          <div className="flex justify-between text-sm text-gray-400 mb-4">
-            <span>50 Botol</span>
-            <span className="text-cyan-400 font-bold text-lg">{bottleCount} Botol</span>
-            <span>1000 Botol</span>
-          </div>
-          <input 
-            type="range" 
-            min="50" 
-            max="1000" 
-            step="10"
-            value={bottleCount} 
-            onChange={(e) => setBottleCount(Number(e.target.value))}
-            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatBox label="Gross Revenue" value={revenue} color="text-white" />
-          <StatBox label="Total HPP (-)" value={totalHPP} color="text-gray-400" />
-          <StatBox label="Biaya Iklan/OPEX (-)" value={totalAds} color="text-red-400" />
-          <StatBox label="Net Profit" value={netProfit} color="text-emerald-400" isHighlight />
-        </div>
-      </div>
-
-    </div>
-  );
-}
-
-function HppRow({ label, value }: any) {
-  return (
-    <div className="flex justify-between items-center text-sm">
-      <span className="text-gray-400">{label}</span>
-      <span className="font-medium text-gray-200">{value}</span>
-    </div>
-  );
-}
-
-function StatBox({ label, value, color, isHighlight = false }: any) {
-  const formatIDR = (num: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
-  };
-
-  return (
-    <div className={`p-4 rounded-xl ${isHighlight ? 'bg-emerald-950/30 border border-emerald-500/30' : 'bg-gray-800/50'}`}>
-      <p className="text-xs text-gray-400 mb-1">{label}</p>
-      <p className={`font-bold ${isHighlight ? 'text-xl' : 'text-lg'} ${color}`}>{formatIDR(value)}</p>
-    </div>
-  );
-}
-
-
-// --- TAB 3: STRATEGI O2O ---
-function TabStrategiO2O() {
-  return (
-    <div className="space-y-12">
-      {/* Offline B2B */}
-      <section>
-        <div className="mb-6 flex items-center gap-3">
-          <div className="p-3 bg-pink-500/10 rounded-lg">
-            <Store className="text-pink-400" size={24} />
-          </div>
-          <h2 className="text-2xl font-bold text-white">Offline B2B (Coffee Shop)</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-pink-500/50 transition-all duration-300">
-            <div className="text-xs font-bold tracking-widest text-pink-400 mb-2 uppercase">Skema 1</div>
-            <h3 className="text-xl font-bold text-white mb-4">Masa Pre-Order (PO)</h3>
-            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              Tidak menaruh stok botol utuh. Hanya titip 1 display akrilik + Botol Tester di meja kasir. Pembelian dilakukan melalui scan barcode.
+          <div>
+            <p className="text-sm text-zinc-400 mb-2 uppercase tracking-wider font-bold text-emerald-500">Net Profit (Laba Bersih)</p>
+            <p className={`text-5xl font-serif font-bold ${netProfit >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
+              {formatRp(netProfit)}
             </p>
-            <div className="bg-gray-950 rounded-xl p-4 border border-gray-800">
-              <ul className="space-y-3 text-sm text-gray-300">
-                <li className="flex gap-2"><CheckCircle size={16} className="text-emerald-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-gray-400">ALUR:</span> Mencium aroma → Scan Barcode → Beli Web → Input Kode Kafe (Cth: KAFESENJA10).</li>
-                <li className="flex gap-2"><CheckCircle size={16} className="text-emerald-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-gray-400">BAGI HASIL:</span> Komisi Rp 10.000 / botol untuk Kafe.</li>
-                <li className="flex gap-2"><CheckCircle size={16} className="text-emerald-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-emerald-400">BENEFIT:</span> Konversi penjualan tanpa keluar biaya Ads.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-pink-500/50 transition-all duration-300">
-            <div className="text-xs font-bold tracking-widest text-cyan-400 mb-2 uppercase">Skema 2</div>
-            <h3 className="text-xl font-bold text-white mb-4">Ready Stock Konsinyasi</h3>
-            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-              Titip jual fisik (misal 1 lusin) di rak Kafe/Distro saat produk sudah ready, menggunakan harga normal (Rp 89.000).
-            </p>
-            <div className="bg-gray-950 rounded-xl p-4 border border-gray-800">
-              <ul className="space-y-3 text-sm text-gray-300">
-                <li className="flex gap-2"><CheckCircle size={16} className="text-cyan-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-gray-400">HARGA:</span> Rp 89.000 / botol.</li>
-                <li className="flex gap-2"><CheckCircle size={16} className="text-cyan-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-gray-400">BAGI HASIL:</span> Komisi Kafe Rp 15.000 (~17%). Disetor ke ELYON Rp 74.000.</li>
-                <li className="flex gap-2"><CheckCircle size={16} className="text-cyan-500 flex-shrink-0 mt-0.5" /> <span className="font-mono text-xs text-cyan-400">PROFIT BERSIH:</span> Rp 45.500 / botol (setelah HPP).</li>
-              </ul>
-            </div>
+            {netProfit < 0 && <p className="text-rose-400 text-sm mt-2 flex items-center gap-1">⚠️ Bisnis mengalami kerugian pada parameter ini.</p>}
           </div>
         </div>
-      </section>
 
-      {/* Digital Engine */}
-      <section>
-        <div className="mb-6 flex items-center gap-3 mt-12">
-          <div className="p-3 bg-cyan-500/10 rounded-lg">
-            <Smartphone className="text-cyan-400" size={24} />
+        {/* Profit Distribution */}
+        {netProfit > 0 && (
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+            <h4 className="text-lg font-bold text-white mb-6 border-b border-zinc-800 pb-4">Distribusi Profit</h4>
+            <div className="space-y-6">
+              
+              <div>
+                <div className="flex justify-between mb-2 items-center">
+                  <div>
+                    <span className="font-bold text-lime-400 text-lg">ELY (75%)</span>
+                    <p className="text-xs text-zinc-500">Investor & Supply Chain</p>
+                  </div>
+                  <span className="text-2xl font-bold text-white">{formatRp(elyShare)}</span>
+                </div>
+                <div className="w-full bg-zinc-950 rounded-full h-3 border border-zinc-800">
+                  <div className="bg-lime-400 h-full rounded-full" style={{ width: '75%' }}></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between mb-2 items-center">
+                  <div>
+                    <span className="font-bold text-blue-400 text-lg">HANIF (25%)</span>
+                    <p className="text-xs text-zinc-500">CMO & COO (Di luar gaji ops)</p>
+                  </div>
+                  <span className="text-2xl font-bold text-white">{formatRp(hanifShare)}</span>
+                </div>
+                <div className="w-full bg-zinc-950 rounded-full h-3 border border-zinc-800">
+                  <div className="bg-blue-400 h-full rounded-full" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-white">Digital Engine (Autopilot)</h2>
-        </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+function InputRow({ label, value, onChange, step = 100 }: any) {
+  return (
+    <div className="flex justify-between items-center gap-4">
+      <label className="text-sm text-zinc-400 flex-1">{label}</label>
+      <input 
+        type="number" 
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-1/2 bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-sm text-white text-right focus:border-lime-400 outline-none font-mono"
+      />
+    </div>
+  );
+}
+
+
+// --- TAB 4: STRUKTUR TIM ---
+function TabTeam() {
+  return (
+    <div className="max-w-5xl mx-auto">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-serif font-bold text-white mb-4">Executive Roles & Equity</h2>
+        <p className="text-zinc-400">Pembagian tugas yang jelas untuk operasional yang tajam.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <DigitalCard 
-            title="The UGC Loop"
-            subtitle="Marketing Zero-Cost"
-            desc="Cashback Rp 20.000 jika konsumen memposting video estetik (unboxing ELYON) di TikTok/IG Story. Menciptakan efek viral organik."
-            accent="bg-gradient-to-r from-pink-500 to-rose-500"
-          />
-          <DigitalCard 
-            title="OrderOnline.id"
-            subtitle="Kasir Otomatis"
-            desc="Konsumen klik Ads → Landing Page → Hitung Ongkir Otomatis → Terbit Invoice. Mengurangi friksi tanpa perlu admin chat manual."
-            accent="bg-gradient-to-r from-emerald-500 to-teal-500"
-          />
-          <DigitalCard 
-            title="Watzap.id"
-            subtitle="CRM & Robot WA"
-            desc="Menagih otomatis (Abandoned Cart) jika konsumen belum transfer dalam 24 jam, serta mem-blast info update produksi secara berkala."
-            accent="bg-gradient-to-r from-cyan-500 to-blue-500"
-          />
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function DigitalCard({ title, subtitle, desc, accent }: any) {
-  return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden relative group">
-      <div className={`h-1 w-full ${accent}`} />
-      <div className="p-6">
-        <p className="text-xs font-mono text-gray-500 mb-1">{subtitle}</p>
-        <h3 className="text-lg font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">{title}</h3>
-        <p className="text-sm text-gray-400 leading-relaxed">{desc}</p>
-      </div>
-    </div>
-  );
-}
-
-
-// --- TAB 4: ROADMAP & RISIKO ---
-function TabRoadmapRisiko() {
-  return (
-    <div className="space-y-12">
-      {/* Roadmap Timeline */}
-      <section>
-        <h2 className="text-2xl font-bold text-white mb-8">Roadmap Eksekusi (3 Bulan)</h2>
-        <div className="relative border-l border-gray-800 ml-4 md:ml-6 space-y-8 pb-4">
+        {/* ELY Card */}
+        <div className="bg-zinc-900 border border-lime-400/30 p-8 rounded-3xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-lime-400/10 rounded-bl-full" />
+          <div className="inline-block px-3 py-1 bg-lime-400/20 text-lime-400 text-xs font-bold rounded-full mb-4 font-mono">
+            75% EQUITY
+          </div>
+          <h3 className="text-3xl font-serif font-bold text-white mb-1">ELY</h3>
+          <p className="text-zinc-400 font-medium mb-6">Investor Utama, CFO & Supply Chain</p>
           
-          <div className="relative pl-8 md:pl-10">
-            <div className="absolute w-4 h-4 bg-gray-900 border-2 border-emerald-400 rounded-full -left-[9px] top-1" />
-            <div className="mb-1 text-emerald-400 font-mono text-sm tracking-wider font-bold">BULAN 1</div>
-            <h3 className="text-xl font-bold text-white mb-2">Validasi & Sourcing</h3>
-            <p className="text-gray-400 text-sm">Blind Test aroma di warkop menggunakan vial ABSH. Deal botol kosongan 50ml dari vendor. Produksi PR Kit Hardbox & cetak botol sample (Laser/Doff) untuk disebar ke Influencer Gen Z.</p>
-          </div>
+          <ul className="space-y-4">
+            <RoleItem icon={Wallet} text="Menyediakan Modal Awal (Rp 20.000.000) untuk operasional dan HPP." />
+            <RoleItem icon={Package} text="Sourcing & Negosiasi langsung dengan pabrik maklon (ABSH Jombang)." />
+            <RoleItem icon={Truck} text="Membuka jalur B2B (door-opener) untuk konsinyasi di titik luring (Coffee Shop)." />
+            <RoleItem icon={Calculator} text="Auditor finansial tertinggi dan pemberi approval untuk budget bulanan." />
+          </ul>
+        </div>
 
-          <div className="relative pl-8 md:pl-10">
-            <div className="absolute w-4 h-4 bg-gray-900 border-2 border-cyan-400 rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
-            <div className="mb-1 text-cyan-400 font-mono text-sm tracking-wider font-bold">BULAN 2</div>
-            <h3 className="text-xl font-bold text-white mb-2">The Hype & Open PO</h3>
-            <p className="text-gray-400 text-sm">Bakar budget Ads dan buka keran PO selama 14 hari dengan harga Early Bird (Rp 69.000). Target: Mengamankan cashflow untuk melunasi vendor botol luar.</p>
+        {/* HANIF Card */}
+        <div className="bg-zinc-900 border border-blue-500/30 p-8 rounded-3xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full" />
+          <div className="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4 font-mono">
+            25% EQUITY + SALARY
           </div>
-
-          <div className="relative pl-8 md:pl-10">
-            <div className="absolute w-4 h-4 bg-gray-900 border-2 border-pink-400 rounded-full -left-[9px] top-1" />
-            <div className="mb-1 text-pink-400 font-mono text-sm tracking-wider font-bold">BULAN 3</div>
-            <h3 className="text-xl font-bold text-white mb-2">Perakitan & Fulfillment</h3>
-            <p className="text-gray-400 text-sm">Botol kosong + cetak Doff dikirim ke ABSH Jombang untuk proses Filling → QC Ketat → Packing → Kirim ke konsumen → Trigger Promo UGC Cashback.</p>
-          </div>
+          <h3 className="text-3xl font-serif font-bold text-white mb-1">HANIF</h3>
+          <p className="text-zinc-400 font-medium mb-6">CMO, COO & Eksekutor Harian</p>
           
+          <ul className="space-y-4">
+            <RoleItem icon={Target} text="Otak Strategi Digital & Kreator Identitas Visual (Desain Botol, Logo, Ads)." />
+            <RoleItem icon={Settings2} text="Membangun ekosistem kasir digital (OrderOnline) dan automasi CRM WhatsApp." />
+            <RoleItem icon={Megaphone} text="Eksekutor periklanan digital (Meta/TikTok Ads) & Strategi UGC Review." />
+            <RoleItem icon={Users} text="Customer Service & Manajemen pemenuhan pesanan (Fulfillment/Packing)." />
+          </ul>
         </div>
-      </section>
 
-      {/* Mitigasi Risiko */}
-      <section>
-        <h2 className="text-2xl font-bold text-white mb-6">Manajemen Risiko Supply Chain</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <RiskCard 
-            title="MOQ Vendor Botol Gagal"
-            desc="Jika pesanan PO tidak tembus batas minimal order (MOQ) vendor luar."
-            mitigation="Gunakan buffer kas Rp 20 Juta untuk menutupi sisa bayar, ATAU nego termin (split payment) di awal."
-          />
-          <RiskCard 
-            title="Lead Time Perakitan Molor"
-            desc="Keterlambatan produksi karena botol diproses custom laser/doff."
-            mitigation="Edukasi konsumen sejak awal bahwa masa tunggu PO adalah 21 hari kerja (bukan 7 hari). Under-promise, over-deliver."
-          />
-          <RiskCard 
-            title="Risiko Botol Pecah (Ekspedisi)"
-            desc="Kerusakan barang saat di tangan kurir pengiriman."
-            mitigation="Standard packing 3 lapis (Kotak, Bubble Wrap, Dus Luar). Wajib menyertakan Video Unboxing Tanpa Jeda untuk klaim asuransi."
-          />
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
 
-function RiskCard({ title, desc, mitigation }: any) {
+function RoleItem({ icon: Icon, text }: any) {
   return (
-    <div className="bg-gray-900 border border-red-900/30 p-6 rounded-2xl relative overflow-hidden group hover:border-red-500/50 transition-colors">
-      <div className="absolute top-0 right-0 bg-red-500/10 p-4 rounded-bl-3xl">
-        <ShieldAlert className="text-red-400/50" size={24} />
+    <li className="flex items-start gap-3">
+      <div className="mt-0.5 p-1.5 bg-zinc-950 rounded-lg border border-zinc-800">
+        <Icon size={16} className="text-zinc-400" />
       </div>
-      <h3 className="text-lg font-bold text-white mb-2 pr-8">{title}</h3>
-      <p className="text-sm text-gray-500 mb-4 h-12">{desc}</p>
-      
-      <div className="bg-gray-950 p-4 rounded-xl border border-gray-800 border-l-2 border-l-emerald-500">
-        <p className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">Mitigasi</p>
-        <p className="text-sm text-gray-300">{mitigation}</p>
-      </div>
-    </div>
+      <p className="text-sm text-zinc-300 leading-relaxed">{text}</p>
+    </li>
   );
 }
