@@ -371,22 +371,28 @@ function TabFinancial() {
   const [customPrint, setCustomPrint] = useState(5000);
   const [opsLogistik, setOpsLogistik] = useState(2000);
   
+  // Marketing CAC
+  const [adsCac, setAdsCac] = useState(15000);
+  
   const [bottleTarget, setBottleTarget] = useState(500);
   const [sellingPrice, setSellingPrice] = useState(69000);
-  
-  const [totalAdsBudget, setTotalAdsBudget] = useState(5000000);
 
   // Calculations
   const baseHppAbsh = selectedBottle.prices[selectedTier as keyof typeof selectedBottle.prices] || 0;
   
-  const totalHppPerBottle = hppMode === 'catalog' 
+  // HPP Barang Murni (tanpa marketing CAC)
+  const hppBarang = hppMode === 'catalog' 
     ? baseHppAbsh + customBox + customPrint + opsLogistik
     : cairanHpp + jasaFilling + botolLuar + customBox + customPrint + opsLogistik;
   
+  const totalHppPerBottle = hppBarang + adsCac;
+  
   const totalRevenue = bottleTarget * sellingPrice;
   const totalHppAll = bottleTarget * totalHppPerBottle;
-  const grossProfit = totalRevenue - totalHppAll;
-  const netProfit = grossProfit - totalAdsBudget;
+  const totalHppBarangAll = bottleTarget * hppBarang;
+  const totalAdsAll = bottleTarget * adsCac;
+  const grossProfit = totalRevenue - totalHppBarangAll;
+  const netProfit = totalRevenue - totalHppAll;
 
   const elyShare = netProfit > 0 ? netProfit * 0.50 : 0;
   const hanifShare = netProfit > 0 ? netProfit * 0.25 : 0;
@@ -496,6 +502,11 @@ function TabFinancial() {
               <InputRow label="Cetak Doff / Laser" value={customPrint} onChange={setCustomPrint} step={500} />
               <InputRow label="Logistik & Bubble Wrap" value={opsLogistik} onChange={setOpsLogistik} step={500} />
             </div>
+
+            <div className="p-4 bg-lime-400/10 rounded-2xl border border-lime-400/30 space-y-4">
+              <span className="text-xs font-mono text-lime-400 font-bold uppercase">Customer Acquisition Cost (CAC)</span>
+              <InputRow label="Budget Iklan per Botol" value={adsCac} onChange={setAdsCac} step={1000} />
+            </div>
             
             <div className="flex justify-between items-center p-4 bg-lime-400/10 border border-lime-400/30 rounded-xl">
               <span className="font-bold text-lime-400">Total HPP / Botol</span>
@@ -506,13 +517,11 @@ function TabFinancial() {
 
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
           <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <Target className="text-blue-400" /> Strategi Penjualan & OPEX
+            <Target className="text-blue-400" /> Strategi Penjualan
           </h3>
           <div className="space-y-4">
             <InputRow label="Target Penjualan (Botol)" value={bottleTarget} onChange={setBottleTarget} step={50} />
             <InputRow label="Harga Jual (Rp)" value={sellingPrice} onChange={setSellingPrice} step={1000} />
-            <hr className="border-zinc-800 my-4" />
-            <InputRow label="Total Budget Iklan (Rp)" value={totalAdsBudget} onChange={setTotalAdsBudget} step={500000} />
           </div>
         </div>
       </div>
@@ -528,9 +537,9 @@ function TabFinancial() {
             <p className="text-xs font-mono text-zinc-500 mt-2">{bottleTarget} botol x {formatRp(sellingPrice)}</p>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
-            <p className="text-sm text-zinc-400 mb-2">Total HPP Keseluruhan</p>
-            <p className="text-3xl font-bold text-red-400">-{formatRp(totalHppAll)}</p>
-            <p className="text-xs font-mono text-zinc-500 mt-2">Modal barang fisik murni</p>
+            <p className="text-sm text-zinc-400 mb-2">Total HPP Barang (Tanpa CAC)</p>
+            <p className="text-3xl font-bold text-red-400">-{formatRp(totalHppBarangAll)}</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{bottleTarget} botol x {formatRp(hppBarang)}</p>
           </div>
         </div>
 
@@ -542,12 +551,12 @@ function TabFinancial() {
             <div>
               <p className="text-sm text-zinc-400 mb-1">Laba Kotor (Gross Profit)</p>
               <p className="text-2xl font-bold text-white">{formatRp(grossProfit)}</p>
-              <p className="text-xs font-mono text-zinc-500 mt-1">Margin: {Math.round((grossProfit/totalRevenue)*100 || 0)}%</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Margin Kotor: {Math.round((grossProfit/totalRevenue)*100 || 0)}%</p>
             </div>
             <div className="md:text-right">
-              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX</p>
-              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget)}</p>
-              <p className="text-xs font-mono text-zinc-500 mt-1">Total Biaya Iklan</p>
+              <p className="text-sm text-zinc-400 mb-1">Pengeluaran Marketing (CAC)</p>
+              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsAll)}</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Iklan: {bottleTarget} botol x {formatRp(adsCac)}</p>
             </div>
           </div>
 
