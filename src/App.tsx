@@ -12,7 +12,11 @@ import {
   Target,
   Megaphone,
   Truck,
-  Wallet
+  Wallet,
+  Plus,
+  X,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 
 // --- DATA KATALOG ABSH ---
@@ -247,6 +251,7 @@ function TabInitialCapital() {
   const [initialCapital, setInitialCapital] = useState(20000000);
 
   // Legalitas & Setup
+  const [useLegalitas, setUseLegalitas] = useState(false); // Default to off as per user request
   const [legalHaki, setLegalHaki] = useState(2000000);
   const [legalBpomPerusahaan, setLegalBpomPerusahaan] = useState(1000000);
   const [bpomVarianCount, setBpomVarianCount] = useState(3);
@@ -257,8 +262,31 @@ function TabInitialCapital() {
   const [samplingProduct, setSamplingProduct] = useState(2500000); // Beli sampel, tester, botol
   const [marketingInitial, setMarketingInitial] = useState(3000000); // PR Kit awal, Ads testing (Bakar Uang pertama)
 
-  const totalLegalitas = legalHaki + legalBpomPerusahaan + (bpomVarianCount * legalBpomPerVarian);
-  const totalRndMarketing = opsInitial + samplingProduct + marketingInitial;
+  // Dynamic Custom CapEx
+  const [customCapex, setCustomCapex] = useState<{ id: number; name: string; amount: number }[]>([
+    { id: 1, name: 'Pembuatan Website', amount: 1500000 },
+    { id: 2, name: 'Cetak Akrilik Display', amount: 500000 },
+  ]);
+
+  const handleAddCustomCapex = () => {
+    setCustomCapex([...customCapex, { id: Date.now(), name: 'Item Baru', amount: 0 }]);
+  };
+
+  const handleRemoveCustomCapex = (id: number) => {
+    setCustomCapex(customCapex.filter(item => item.id !== id));
+  };
+
+  const handleUpdateCustomCapexName = (id: number, name: string) => {
+    setCustomCapex(customCapex.map(item => item.id === id ? { ...item, name } : item));
+  };
+
+  const handleUpdateCustomCapexAmount = (id: number, amount: number) => {
+    setCustomCapex(customCapex.map(item => item.id === id ? { ...item, amount } : item));
+  };
+
+  const totalLegalitas = useLegalitas ? (legalHaki + legalBpomPerusahaan + (bpomVarianCount * legalBpomPerVarian)) : 0;
+  const totalCustomCapex = customCapex.reduce((sum, item) => sum + item.amount, 0);
+  const totalRndMarketing = opsInitial + samplingProduct + marketingInitial + totalCustomCapex;
   const totalCapEx = totalLegalitas + totalRndMarketing;
   
   const remainingCapital = initialCapital - totalCapEx;
@@ -279,10 +307,26 @@ function TabInitialCapital() {
         </div>
 
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <Target className="text-purple-400" /> Biaya Legalitas & Setup
-          </h3>
-          <div className="space-y-4">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Target className="text-purple-400" /> Biaya Legalitas & Setup
+            </h3>
+            <button 
+              onClick={() => setUseLegalitas(!useLegalitas)}
+              className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors"
+            >
+              {useLegalitas ? <ToggleRight className="text-purple-400" /> : <ToggleLeft />}
+              {useLegalitas ? 'Aktif' : 'Nonaktif'}
+            </button>
+          </div>
+          
+          {!useLegalitas && (
+            <div className="p-4 bg-zinc-800/50 rounded-xl border border-zinc-800 text-sm text-zinc-400 mb-4">
+              Biaya legalitas tidak dihitung (Misal: menggunakan legalitas pabrik).
+            </div>
+          )}
+
+          <div className={`space-y-4 transition-opacity duration-300 ${!useLegalitas ? 'opacity-30 pointer-events-none' : ''}`}>
             <InputRow label="LHKN / Daftar Brand" value={legalHaki} onChange={setLegalHaki} step={500000} />
             <InputRow label="Izin BPOM Perusahaan" value={legalBpomPerusahaan} onChange={setLegalBpomPerusahaan} step={500000} />
             <div className="flex gap-2">
@@ -305,6 +349,48 @@ function TabInitialCapital() {
             <InputRow label="Operasional & Desain Awal" value={opsInitial} onChange={setOpsInitial} step={500000} />
             <InputRow label="Produk Sampel & Tester" value={samplingProduct} onChange={setSamplingProduct} step={500000} />
             <InputRow label="Marketing / Ads Testing" value={marketingInitial} onChange={setMarketingInitial} step={500000} />
+            
+            <hr className="border-zinc-800 my-4" />
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm text-zinc-400">Pengeluaran Lainnya (Dynamic)</label>
+              <button 
+                onClick={handleAddCustomCapex}
+                className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white px-2 py-1 rounded-md flex items-center gap-1 transition-colors"
+              >
+                <Plus size={14} /> Tambah
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {customCapex.map((item) => (
+                <div key={item.id} className="flex flex-col gap-2 p-3 bg-zinc-950 border border-zinc-800 rounded-xl">
+                  <div className="flex justify-between items-center gap-2">
+                    <input 
+                      type="text" 
+                      value={item.name}
+                      onChange={(e) => handleUpdateCustomCapexName(item.id, e.target.value)}
+                      className="flex-1 bg-transparent border-b border-zinc-800 px-1 py-1 text-sm text-white focus:border-rose-400 outline-none"
+                      placeholder="Nama Pengeluaran"
+                    />
+                    <button 
+                      onClick={() => handleRemoveCustomCapex(item.id)}
+                      className="text-zinc-600 hover:text-rose-400 transition-colors p-1"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  <InputRow 
+                    label="Alokasi (Rp)" 
+                    value={item.amount} 
+                    onChange={(val: number) => handleUpdateCustomCapexAmount(item.id, val)} 
+                    step={100000} 
+                  />
+                </div>
+              ))}
+              {customCapex.length === 0 && (
+                <p className="text-xs text-zinc-600 italic text-center py-2">Tidak ada pengeluaran tambahan.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -336,15 +422,16 @@ function TabInitialCapital() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+          <div className={`bg-zinc-900 border border-zinc-800 p-6 rounded-3xl ${!useLegalitas ? 'opacity-50' : ''}`}>
             <p className="text-sm text-zinc-400 mb-2">Legalitas & Izin</p>
             <p className="text-2xl font-bold text-white">{formatRp(totalLegalitas)}</p>
-            <p className="text-xs font-mono text-zinc-500 mt-2">{Math.round((totalLegalitas/totalCapEx)*100 || 0)}% dari total pengeluaran</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{totalCapEx > 0 ? Math.round((totalLegalitas/totalCapEx)*100) : 0}% dari total pengeluaran</p>
+            {!useLegalitas && <p className="text-xs text-rose-400 mt-1">Status: Nonaktif</p>}
           </div>
           <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
             <p className="text-sm text-zinc-400 mb-2">R&D, Produk & Ads Awal</p>
             <p className="text-2xl font-bold text-white">{formatRp(totalRndMarketing)}</p>
-            <p className="text-xs font-mono text-zinc-500 mt-2">{Math.round((totalRndMarketing/totalCapEx)*100 || 0)}% dari total pengeluaran</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{totalCapEx > 0 ? Math.round((totalRndMarketing/totalCapEx)*100) : 0}% dari total pengeluaran</p>
           </div>
         </div>
 
