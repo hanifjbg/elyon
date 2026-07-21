@@ -34,8 +34,9 @@ export default function App() {
   const tabs = [
     { id: 0, label: 'Brand & Visi', icon: Crown },
     { id: 1, label: 'Alur Bisnis', icon: Workflow },
-    { id: 2, label: 'Financial Engine', icon: Calculator },
-    { id: 3, label: 'Struktur Tim', icon: Users }
+    { id: 2, label: 'Initial Capital', icon: Wallet },
+    { id: 3, label: 'Unit Economics', icon: Calculator },
+    { id: 4, label: 'Struktur Tim', icon: Users }
   ];
 
   return (
@@ -82,8 +83,9 @@ export default function App() {
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
           {activeTab === 0 && <TabBrand />}
           {activeTab === 1 && <TabFlowchart />}
-          {activeTab === 2 && <TabFinancial />}
-          {activeTab === 3 && <TabTeam />}
+          {activeTab === 2 && <TabInitialCapital />}
+          {activeTab === 3 && <TabFinancial />}
+          {activeTab === 4 && <TabTeam />}
         </div>
       </main>
     </div>
@@ -241,7 +243,116 @@ function TabFlowchart() {
   );
 }
 
-// --- TAB 3: FINANCIAL ENGINE ---
+function TabInitialCapital() {
+  const [initialCapital, setInitialCapital] = useState(20000000);
+
+  // Legalitas & Setup
+  const [legalHaki, setLegalHaki] = useState(2000000);
+  const [legalBpomPerusahaan, setLegalBpomPerusahaan] = useState(1000000);
+  const [bpomVarianCount, setBpomVarianCount] = useState(3);
+  const [legalBpomPerVarian, setLegalBpomPerVarian] = useState(1000000);
+
+  // R&D & Marketing Awal
+  const [opsInitial, setOpsInitial] = useState(1500000); // Operasional, bensin, meeting, desain
+  const [samplingProduct, setSamplingProduct] = useState(2500000); // Beli sampel, tester, botol
+  const [marketingInitial, setMarketingInitial] = useState(3000000); // PR Kit awal, Ads testing (Bakar Uang pertama)
+
+  const totalLegalitas = legalHaki + legalBpomPerusahaan + (bpomVarianCount * legalBpomPerVarian);
+  const totalRndMarketing = opsInitial + samplingProduct + marketingInitial;
+  const totalCapEx = totalLegalitas + totalRndMarketing;
+  
+  const remainingCapital = initialCapital - totalCapEx;
+
+  const formatRp = (num: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Control Panel */}
+      <div className="lg:col-span-5 space-y-6">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <Wallet className="text-emerald-400" /> Modal Awal (Initial Capital)
+          </h3>
+          <div className="space-y-4">
+            <InputRow label="Total Uang Kas Masuk" value={initialCapital} onChange={setInitialCapital} step={1000000} />
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <Target className="text-purple-400" /> Biaya Legalitas & Setup
+          </h3>
+          <div className="space-y-4">
+            <InputRow label="LHKN / Daftar Brand" value={legalHaki} onChange={setLegalHaki} step={500000} />
+            <InputRow label="Izin BPOM Perusahaan" value={legalBpomPerusahaan} onChange={setLegalBpomPerusahaan} step={500000} />
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <InputRow label={`BPOM / Varian (${bpomVarianCount}x)`} value={legalBpomPerVarian} onChange={setLegalBpomPerVarian} step={500000} />
+              </div>
+            </div>
+            <div className="flex justify-between items-center text-xs mt-2">
+              <label className="text-zinc-500">Jumlah Varian BPOM</label>
+              <input type="number" min="1" max="10" value={bpomVarianCount} onChange={(e) => setBpomVarianCount(Number(e.target.value))} className="w-16 bg-zinc-950 border border-zinc-800 rounded-md p-1 text-white text-center font-mono focus:border-purple-400 outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <TrendingUp className="text-rose-400" /> R&D dan Marketing Awal
+          </h3>
+          <div className="space-y-4">
+            <InputRow label="Operasional & Desain Awal" value={opsInitial} onChange={setOpsInitial} step={500000} />
+            <InputRow label="Produk Sampel & Tester" value={samplingProduct} onChange={setSamplingProduct} step={500000} />
+            <InputRow label="Marketing / Ads Testing" value={marketingInitial} onChange={setMarketingInitial} step={500000} />
+          </div>
+        </div>
+      </div>
+
+      {/* Output Dashboard */}
+      <div className="lg:col-span-7 space-y-6">
+        <div className="bg-zinc-900 border border-zinc-800 p-6 md:p-8 rounded-3xl relative overflow-hidden">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full" />
+          
+          <div className="flex flex-col md:flex-row justify-between md:items-end mb-8 border-b border-zinc-800 pb-6 gap-4">
+            <div>
+              <p className="text-sm text-zinc-400 mb-1">Total Modal Disetor</p>
+              <p className="text-2xl font-bold text-white">{formatRp(initialCapital)}</p>
+            </div>
+            <div className="md:text-right">
+              <p className="text-sm text-zinc-400 mb-1">Total Pengeluaran Awal (CapEx)</p>
+              <p className="text-lg font-bold text-rose-400">-{formatRp(totalCapEx)}</p>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm text-zinc-400 mb-2 uppercase tracking-wider font-bold text-emerald-500">Sisa Uang Kas / Buffer</p>
+            <p className={`text-5xl font-serif font-bold ${remainingCapital >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
+              {formatRp(remainingCapital)}
+            </p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">Buffer ini digunakan sebagai modal putar saat PO berjalan (Bayar HPP/Pabrik, dll).</p>
+            {remainingCapital < 0 && <p className="text-rose-400 text-sm mt-2 flex items-center gap-1">⚠️ Modal awal tidak cukup untuk menutupi biaya setup.</p>}
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+            <p className="text-sm text-zinc-400 mb-2">Legalitas & Izin</p>
+            <p className="text-2xl font-bold text-white">{formatRp(totalLegalitas)}</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{Math.round((totalLegalitas/totalCapEx)*100 || 0)}% dari total pengeluaran</p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-3xl">
+            <p className="text-sm text-zinc-400 mb-2">R&D, Produk & Ads Awal</p>
+            <p className="text-2xl font-bold text-white">{formatRp(totalRndMarketing)}</p>
+            <p className="text-xs font-mono text-zinc-500 mt-2">{Math.round((totalRndMarketing/totalCapEx)*100 || 0)}% dari total pengeluaran</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 function TabFinancial() {
   // Mode Selection
   const [hppMode, setHppMode] = useState<'catalog' | 'manual'>('manual');
@@ -265,12 +376,6 @@ function TabFinancial() {
   
   const [totalAdsBudget, setTotalAdsBudget] = useState(5000000);
 
-  // Legalitas & Setup (CapEx)
-  const [legalHaki, setLegalHaki] = useState(2000000);
-  const [legalBpomPerusahaan, setLegalBpomPerusahaan] = useState(1000000);
-  const [bpomVarianCount, setBpomVarianCount] = useState(3);
-  const [legalBpomPerVarian, setLegalBpomPerVarian] = useState(1000000);
-
   // Calculations
   const baseHppAbsh = selectedBottle.prices[selectedTier as keyof typeof selectedBottle.prices] || 0;
   
@@ -278,12 +383,10 @@ function TabFinancial() {
     ? baseHppAbsh + customBox + customPrint + opsLogistik
     : cairanHpp + jasaFilling + botolLuar + customBox + customPrint + opsLogistik;
   
-  const totalLegalitas = legalHaki + legalBpomPerusahaan + (bpomVarianCount * legalBpomPerVarian);
-
   const totalRevenue = bottleTarget * sellingPrice;
   const totalHppAll = bottleTarget * totalHppPerBottle;
   const grossProfit = totalRevenue - totalHppAll;
-  const netProfit = grossProfit - totalAdsBudget - totalLegalitas;
+  const netProfit = grossProfit - totalAdsBudget;
 
   const elyShare = netProfit > 0 ? netProfit * 0.50 : 0;
   const hanifShare = netProfit > 0 ? netProfit * 0.25 : 0;
@@ -412,25 +515,6 @@ function TabFinancial() {
             <InputRow label="Total Budget Iklan (Rp)" value={totalAdsBudget} onChange={setTotalAdsBudget} step={500000} />
           </div>
         </div>
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <Wallet className="text-purple-400" /> Biaya Legalitas & Setup Awal
-          </h3>
-          <div className="space-y-4">
-            <InputRow label="LHKN / Daftar Brand" value={legalHaki} onChange={setLegalHaki} step={500000} />
-            <InputRow label="Izin BPOM Perusahaan" value={legalBpomPerusahaan} onChange={setLegalBpomPerusahaan} step={500000} />
-            <div className="flex gap-2">
-              <div className="flex-1">
-                <InputRow label={`BPOM / Varian (${bpomVarianCount}x)`} value={legalBpomPerVarian} onChange={setLegalBpomPerVarian} step={500000} />
-              </div>
-            </div>
-            <div className="flex justify-between items-center text-xs mt-2">
-              <label className="text-zinc-500">Jumlah Varian</label>
-              <input type="number" min="1" max="10" value={bpomVarianCount} onChange={(e) => setBpomVarianCount(Number(e.target.value))} className="w-16 bg-zinc-950 border border-zinc-800 rounded-md p-1 text-white text-center font-mono focus:border-purple-400 outline-none" />
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* RIGHT COLUMN: Output Dashboard */}
@@ -461,9 +545,9 @@ function TabFinancial() {
               <p className="text-xs font-mono text-zinc-500 mt-1">Margin: {Math.round((grossProfit/totalRevenue)*100 || 0)}%</p>
             </div>
             <div className="md:text-right">
-              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX & CapEx</p>
-              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget + totalLegalitas)}</p>
-              <p className="text-xs font-mono text-zinc-500 mt-1">Iklan: {formatRp(totalAdsBudget)} | Setup & Legal: {formatRp(totalLegalitas)}</p>
+              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX</p>
+              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget)}</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Total Biaya Iklan</p>
             </div>
           </div>
 
@@ -530,15 +614,27 @@ function TabFinancial() {
   );
 }
 
-function InputRow({ label, value, onChange, step = 100 }: any) {
+function InputRow({ label, value, onChange }: any) {
+  const displayValue = new Intl.NumberFormat('id-ID').format(value);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, '');
+    const numValue = parseInt(rawValue, 10);
+    if (!isNaN(numValue)) {
+      onChange(numValue);
+    } else {
+      onChange(0);
+    }
+  };
+
   return (
     <div className="flex justify-between items-center gap-4">
       <label className="text-sm text-zinc-400 flex-1">{label}</label>
       <input 
-        type="number" 
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        type="text" 
+        inputMode="numeric"
+        value={displayValue}
+        onChange={handleChange}
         className="w-1/2 bg-zinc-900 border border-zinc-700 rounded-lg p-2 text-sm text-white text-right focus:border-lime-400 outline-none font-mono"
       />
     </div>
