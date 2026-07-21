@@ -209,7 +209,7 @@ function TabFlowchart() {
     {
       icon: Wallet,
       title: "Fase 6: Distribusi Profit",
-      desc: "Rekapitulasi keuangan. Pembayaran Gaji Operasional HANIF. Laba bersih yang tersisa dibagikan sesuai porsi saham: ELY (75%) dan HANIF (25%).",
+      desc: "Rekapitulasi keuangan operasional (OPEX). Laba bersih dibagikan sesuai porsi saham: ELY (50%), HANIF (25%), dan Kas Perusahaan (25%).",
       color: "text-emerald-400"
     }
   ];
@@ -243,11 +243,20 @@ function TabFlowchart() {
 
 // --- TAB 3: FINANCIAL ENGINE ---
 function TabFinancial() {
-  // Input States
+  // Mode Selection
+  const [hppMode, setHppMode] = useState<'catalog' | 'manual'>('manual');
+
+  // Catalog States
   const [selectedBottle, setSelectedBottle] = useState(ABSH_CATALOG[2]); // Default Channel Ori
   const [selectedTier, setSelectedTier] = useState('100 Dus');
   
-  const [customBox, setCustomBox] = useState(5000);
+  // Custom/Manual States
+  const [cairanHpp, setCairanHpp] = useState(25000);
+  const [jasaFilling, setJasaFilling] = useState(1500);
+  const [botolLuar, setBotolLuar] = useState(7500);
+  
+  // Shared Extras
+  const [customBox, setCustomBox] = useState(6500);
   const [customPrint, setCustomPrint] = useState(5000);
   const [opsLogistik, setOpsLogistik] = useState(2000);
   
@@ -255,21 +264,42 @@ function TabFinancial() {
   const [sellingPrice, setSellingPrice] = useState(69000);
   
   const [totalAdsBudget, setTotalAdsBudget] = useState(5000000);
-  const [hanifSalary, setHanifSalary] = useState(2000000);
+
+  // Legalitas & Setup (CapEx)
+  const [legalHaki, setLegalHaki] = useState(2000000);
+  const [legalBpomPerusahaan, setLegalBpomPerusahaan] = useState(1000000);
+  const [bpomVarianCount, setBpomVarianCount] = useState(3);
+  const [legalBpomPerVarian, setLegalBpomPerVarian] = useState(1000000);
 
   // Calculations
   const baseHppAbsh = selectedBottle.prices[selectedTier as keyof typeof selectedBottle.prices] || 0;
-  const totalHppPerBottle = baseHppAbsh + customBox + customPrint + opsLogistik;
   
+  const totalHppPerBottle = hppMode === 'catalog' 
+    ? baseHppAbsh + customBox + customPrint + opsLogistik
+    : cairanHpp + jasaFilling + botolLuar + customBox + customPrint + opsLogistik;
+  
+  const totalLegalitas = legalHaki + legalBpomPerusahaan + (bpomVarianCount * legalBpomPerVarian);
+
   const totalRevenue = bottleTarget * sellingPrice;
   const totalHppAll = bottleTarget * totalHppPerBottle;
   const grossProfit = totalRevenue - totalHppAll;
-  const netProfit = grossProfit - totalAdsBudget - hanifSalary;
+  const netProfit = grossProfit - totalAdsBudget - totalLegalitas;
 
-  const elyShare = netProfit > 0 ? netProfit * 0.75 : 0;
+  const elyShare = netProfit > 0 ? netProfit * 0.50 : 0;
   const hanifShare = netProfit > 0 ? netProfit * 0.25 : 0;
+  const kasShare = netProfit > 0 ? netProfit * 0.25 : 0;
 
   const formatRp = (num: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
+  const getQualityBadge = (price: number) => {
+    // Estimasi harga cairan murni untuk 50ml berdasarkan patokan pabrik 35ml
+    if (price < 15000) return { label: 'Standard (2-3 Jam)', color: 'text-zinc-400', bg: 'bg-zinc-800' };
+    if (price < 25000) return { label: 'Medium (4 Jam++)', color: 'text-cyan-400', bg: 'bg-cyan-400/10' };
+    if (price < 35000) return { label: 'Grade A (6 Jam++)', color: 'text-lime-400', bg: 'bg-lime-400/10' };
+    return { label: 'Premium Extrait (>8 Jam)', color: 'text-purple-400', bg: 'bg-purple-400/10' };
+  };
+
+  const quality = getQualityBadge(cairanHpp);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -277,48 +307,91 @@ function TabFinancial() {
       {/* LEFT COLUMN: Control Panel */}
       <div className="lg:col-span-5 space-y-6">
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
-          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <Settings2 className="text-lime-400" /> Parameter HPP & Produksi
-          </h3>
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Settings2 className="text-lime-400" /> Parameter HPP
+            </h3>
+            
+            {/* Toggle Mode */}
+            <div className="flex bg-zinc-950 rounded-lg p-1 border border-zinc-800">
+              <button 
+                onClick={() => setHppMode('manual')}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${hppMode === 'manual' ? 'bg-zinc-800 text-lime-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                Custom & Jasa
+              </button>
+              <button 
+                onClick={() => setHppMode('catalog')}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${hppMode === 'catalog' ? 'bg-zinc-800 text-lime-400' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                Katalog Pabrik
+              </button>
+            </div>
+          </div>
           
           <div className="space-y-5">
-            {/* Pabrik ABSH Selection */}
-            <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-mono text-zinc-500 uppercase">Data Pabrik ABSH</span>
+            {hppMode === 'catalog' ? (
+              /* Pabrik ABSH Selection */
+              <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-mono text-zinc-500 uppercase">Maklon Full Pabrik ABSH</span>
+                </div>
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Jenis Botol (35ml Maklon)</label>
+                  <select 
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
+                    value={selectedBottle.id}
+                    onChange={(e) => setSelectedBottle(ABSH_CATALOG.find(b => b.id === e.target.value) || ABSH_CATALOG[0])}
+                  >
+                    {ABSH_CATALOG.map(b => (
+                      <option key={b.id} value={b.id}>{b.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Tier Pemesanan</label>
+                  <select 
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
+                    value={selectedTier}
+                    onChange={(e) => setSelectedTier(e.target.value)}
+                  >
+                    {TIER_OPTIONS.map(t => (
+                      <option key={t} value={t}>{t} (Harga: {formatRp(selectedBottle.prices[t as keyof typeof selectedBottle.prices])}/pcs)</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm text-zinc-400 mb-1.5">Jenis Botol (35ml Maklon)</label>
-                <select 
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
-                  value={selectedBottle.id}
-                  onChange={(e) => setSelectedBottle(ABSH_CATALOG.find(b => b.id === e.target.value) || ABSH_CATALOG[0])}
-                >
-                  {ABSH_CATALOG.map(b => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
-                  ))}
-                </select>
+            ) : (
+              /* Manual Input / Jasa Selection */
+              <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-mono text-zinc-500 uppercase">Racikan Custom (Bawa Botol Sendiri)</span>
+                </div>
+                
+                <div>
+                  <InputRow label="Biaya Cairan / Resep (Rp)" value={cairanHpp} onChange={setCairanHpp} step={1000} />
+                  <div className="mt-2 flex items-center justify-between">
+                     <div className="text-[10px] text-zinc-500 leading-tight pr-4">
+                       *Ref 35ml Pabrik (Full): 2jam (15k), 4jam (20k), 6jam (25k).
+                     </div>
+                     <span className={`text-[10px] font-mono px-2 py-1 rounded-full border border-current whitespace-nowrap ${quality.color} ${quality.bg}`}>
+                        AI Prediksi: {quality.label}
+                     </span>
+                  </div>
+                </div>
+
+                <hr className="border-zinc-800 my-2" />
+                <InputRow label="Jasa Filling & Wrap Pabrik" value={jasaFilling} onChange={setJasaFilling} step={500} />
+                <InputRow label="Harga Botol Kosong Luar" value={botolLuar} onChange={setBotolLuar} step={500} />
               </div>
-              <div>
-                <label className="block text-sm text-zinc-400 mb-1.5">Tier Pemesanan</label>
-                <select 
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:border-lime-400 outline-none"
-                  value={selectedTier}
-                  onChange={(e) => setSelectedTier(e.target.value)}
-                >
-                  {TIER_OPTIONS.map(t => (
-                    <option key={t} value={t}>{t} (Harga: {formatRp(selectedBottle.prices[t as keyof typeof selectedBottle.prices])}/pcs)</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            )}
 
             {/* Custom Extras */}
             <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800 space-y-4">
-              <span className="text-xs font-mono text-zinc-500 uppercase">Custom Vendor Luar (Rp)</span>
-              <InputRow label="Hardbox / Kemasan" value={customBox} onChange={setCustomBox} />
-              <InputRow label="Cetak Doff / Laser" value={customPrint} onChange={setCustomPrint} />
-              <InputRow label="Logistik & Packing" value={opsLogistik} onChange={setOpsLogistik} />
+              <span className="text-xs font-mono text-zinc-500 uppercase">Biaya Eksternal (Rp)</span>
+              <InputRow label="Hardbox & Packaging" value={customBox} onChange={setCustomBox} step={500} />
+              <InputRow label="Cetak Doff / Laser" value={customPrint} onChange={setCustomPrint} step={500} />
+              <InputRow label="Logistik & Bubble Wrap" value={opsLogistik} onChange={setOpsLogistik} step={500} />
             </div>
             
             <div className="flex justify-between items-center p-4 bg-lime-400/10 border border-lime-400/30 rounded-xl">
@@ -337,7 +410,25 @@ function TabFinancial() {
             <InputRow label="Harga Jual (Rp)" value={sellingPrice} onChange={setSellingPrice} step={1000} />
             <hr className="border-zinc-800 my-4" />
             <InputRow label="Total Budget Iklan (Rp)" value={totalAdsBudget} onChange={setTotalAdsBudget} step={500000} />
-            <InputRow label="Gaji Ops HANIF (Rp)" value={hanifSalary} onChange={setHanifSalary} step={500000} />
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <Wallet className="text-purple-400" /> Biaya Legalitas & Setup Awal
+          </h3>
+          <div className="space-y-4">
+            <InputRow label="LHKN / Daftar Brand" value={legalHaki} onChange={setLegalHaki} step={500000} />
+            <InputRow label="Izin BPOM Perusahaan" value={legalBpomPerusahaan} onChange={setLegalBpomPerusahaan} step={500000} />
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <InputRow label={`BPOM / Varian (${bpomVarianCount}x)`} value={legalBpomPerVarian} onChange={setLegalBpomPerVarian} step={500000} />
+              </div>
+            </div>
+            <div className="flex justify-between items-center text-xs mt-2">
+              <label className="text-zinc-500">Jumlah Varian</label>
+              <input type="number" min="1" max="10" value={bpomVarianCount} onChange={(e) => setBpomVarianCount(Number(e.target.value))} className="w-16 bg-zinc-950 border border-zinc-800 rounded-md p-1 text-white text-center font-mono focus:border-purple-400 outline-none" />
+            </div>
           </div>
         </div>
       </div>
@@ -370,9 +461,9 @@ function TabFinancial() {
               <p className="text-xs font-mono text-zinc-500 mt-1">Margin: {Math.round((grossProfit/totalRevenue)*100 || 0)}%</p>
             </div>
             <div className="md:text-right">
-              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX</p>
-              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget + hanifSalary)}</p>
-              <p className="text-xs font-mono text-zinc-500 mt-1">Iklan + Gaji Hanif</p>
+              <p className="text-sm text-zinc-400 mb-1">Pengurangan OPEX & CapEx</p>
+              <p className="text-lg font-bold text-rose-400">-{formatRp(totalAdsBudget + totalLegalitas)}</p>
+              <p className="text-xs font-mono text-zinc-500 mt-1">Iklan: {formatRp(totalAdsBudget)} | Setup & Legal: {formatRp(totalLegalitas)}</p>
             </div>
           </div>
 
@@ -394,13 +485,13 @@ function TabFinancial() {
               <div>
                 <div className="flex justify-between mb-2 items-center">
                   <div>
-                    <span className="font-bold text-lime-400 text-lg">ELY (75%)</span>
+                    <span className="font-bold text-lime-400 text-lg">ELY (50%)</span>
                     <p className="text-xs text-zinc-500">Investor & Supply Chain</p>
                   </div>
                   <span className="text-2xl font-bold text-white">{formatRp(elyShare)}</span>
                 </div>
                 <div className="w-full bg-zinc-950 rounded-full h-3 border border-zinc-800">
-                  <div className="bg-lime-400 h-full rounded-full" style={{ width: '75%' }}></div>
+                  <div className="bg-lime-400 h-full rounded-full" style={{ width: '50%' }}></div>
                 </div>
               </div>
 
@@ -408,12 +499,25 @@ function TabFinancial() {
                 <div className="flex justify-between mb-2 items-center">
                   <div>
                     <span className="font-bold text-blue-400 text-lg">HANIF (25%)</span>
-                    <p className="text-xs text-zinc-500">CMO & COO (Di luar gaji ops)</p>
+                    <p className="text-xs text-zinc-500">CMO, COO & Eksekutor</p>
                   </div>
                   <span className="text-2xl font-bold text-white">{formatRp(hanifShare)}</span>
                 </div>
                 <div className="w-full bg-zinc-950 rounded-full h-3 border border-zinc-800">
                   <div className="bg-blue-400 h-full rounded-full" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+              
+              <div>
+                <div className="flex justify-between mb-2 items-center">
+                  <div>
+                    <span className="font-bold text-purple-400 text-lg">KAS PERUSAHAAN (25%)</span>
+                    <p className="text-xs text-zinc-500">Buffer & Re-investasi</p>
+                  </div>
+                  <span className="text-2xl font-bold text-white">{formatRp(kasShare)}</span>
+                </div>
+                <div className="w-full bg-zinc-950 rounded-full h-3 border border-zinc-800">
+                  <div className="bg-purple-400 h-full rounded-full" style={{ width: '25%' }}></div>
                 </div>
               </div>
 
@@ -457,7 +561,7 @@ function TabTeam() {
         <div className="bg-zinc-900 border border-lime-400/30 p-8 rounded-3xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-lime-400/10 rounded-bl-full" />
           <div className="inline-block px-3 py-1 bg-lime-400/20 text-lime-400 text-xs font-bold rounded-full mb-4 font-mono">
-            75% EQUITY
+            50% EQUITY
           </div>
           <h3 className="text-3xl font-serif font-bold text-white mb-1">ELY</h3>
           <p className="text-zinc-400 font-medium mb-6">Investor Utama, CFO & Supply Chain</p>
@@ -474,7 +578,7 @@ function TabTeam() {
         <div className="bg-zinc-900 border border-blue-500/30 p-8 rounded-3xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full" />
           <div className="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4 font-mono">
-            25% EQUITY + SALARY
+            25% EQUITY
           </div>
           <h3 className="text-3xl font-serif font-bold text-white mb-1">HANIF</h3>
           <p className="text-zinc-400 font-medium mb-6">CMO, COO & Eksekutor Harian</p>
