@@ -33,7 +33,13 @@ const ABSH_CATALOG = [
 const TIER_OPTIONS = ['2 Dus', '10 Dus', '100 Dus', '1000 Dus'];
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+
+  if (!isAuthenticated) {
+    return <OfflineScreen onAuth={() => setIsAuthenticated(true)} />;
+  }
+
 
   const tabs = [
     { id: 0, label: 'Brand & Visi', icon: Crown },
@@ -796,5 +802,52 @@ function RoleItem({ icon: Icon, text }: any) {
       </div>
       <p className="text-sm text-zinc-300 leading-relaxed">{text}</p>
     </li>
+  );
+}
+function OfflineScreen({ onAuth }: { onAuth: () => void }) {
+  const [showInput, setShowInput] = useState(false);
+  const [passcode, setPasscode] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passcode === '868686') {
+      onAuth();
+    } else {
+      setShowInput(false);
+      setPasscode('');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center text-zinc-400 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 to-zinc-950"></div>
+      <div className="z-10 text-center flex flex-col items-center">
+        <div className="w-16 h-16 border-t-2 border-zinc-700 border-solid rounded-full animate-spin mb-8"></div>
+        <h1 className="text-2xl font-bold text-zinc-300 mb-2 tracking-widest uppercase">System Offline</h1>
+        <p className="text-sm text-zinc-500 font-mono">ERR_CONNECTION_REFUSED</p>
+      </div>
+      
+      {/* Hidden interactive area */}
+      <div 
+        className="absolute bottom-0 right-0 w-24 h-24 z-20 cursor-default"
+        onClick={() => setShowInput(true)}
+      />
+
+      {showInput && (
+        <form 
+          onSubmit={handleSubmit}
+          className="absolute bottom-8 right-8 z-30"
+        >
+          <input
+            type="password"
+            autoFocus
+            value={passcode}
+            onChange={(e) => setPasscode(e.target.value)}
+            className="bg-transparent border-b border-zinc-700 text-zinc-500 text-sm focus:outline-none focus:border-zinc-500 w-32 px-1 py-1"
+            placeholder="..."
+          />
+        </form>
+      )}
+    </div>
   );
 }
